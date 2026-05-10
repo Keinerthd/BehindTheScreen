@@ -1,0 +1,21 @@
+{
+  "question": "¿Contiene insulto?",
+  "yes": {
+    "result": "Mensaje ofensivo"
+  },
+  "no": {
+    "question": "¿Contiene amenaza?",
+    "yes": {
+      "result": "Mensaje grave"
+    },
+    "no": {
+      "question": "¿Difunde rumor?",
+      "yes": {
+        "result": "Cyberbullying"
+      },
+      "no": {
+        "result": "Mensaje normal"
+      }
+    }
+  }
+}

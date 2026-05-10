@@ -1,0 +1,22 @@
+{
+  "cases": [
+    {
+      "case_id": 1,
+      "title": "El usuario anónimo",
+      "victim": "Emma",
+      "suspects": ["Noah", "Mia", "Lucas"],
+      "bully": "Noah",
+      "messages": [
+        "No deberías volver al grupo",
+        "Todos se están burlando de ti",
+        "ShadowUser publicó una imagen editada"
+      ],
+      "clues": [
+        "El mensaje fue enviado a las 8:30 PM",
+        "Noah estuvo conectado a esa hora",
+        "La cuenta anónima tiene relación con el grupo de Noah"
+      ],
+      "time_limit_minutes": 10
+    }
+  ]
+}
