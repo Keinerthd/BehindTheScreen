@@ -17,9 +17,9 @@ class Game:
         self.running = True
         self.current_screen = "menu"
 
-        # Inicializar y cargar el caso 1
+        # Inicializar y cargar un caso aleatorio
         self.case_manager = CaseManager()
-        self.case_manager.select_case(1)
+        self.case_manager.select_random_case()
         
         # Inicializar árbol de decisiones
         self.decision_tree = DecisionTree()
@@ -27,6 +27,7 @@ class Game:
         # Inicializar y construir el grafo
         self.graph_manager = GraphManager()
         self.graph_manager.build_case_graph(
+            self.case_manager.active_case.get("victim", "Emma"),
             self.case_manager.get_suspects(), 
             self.case_manager.active_case.get("bully", "ShadowUser")
         )
@@ -36,6 +37,15 @@ class Game:
         self.graph_screen = GraphScreen(self)
         self.results_screen = ResultsScreen(self)
 
+    def start_new_investigation(self):
+        self.case_manager.select_random_case()
+        self.graph_manager.build_case_graph(
+            self.case_manager.active_case.get("victim", "Emma"),
+            self.case_manager.get_suspects(), 
+            self.case_manager.active_case.get("bully", "ShadowUser")
+        )
+        if hasattr(self, 'investigation_screen'):
+            self.investigation_screen.selected_suspect = None
 
     def run(self):
         while self.running:

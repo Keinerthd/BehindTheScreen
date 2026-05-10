@@ -16,6 +16,7 @@ class Menu:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
                 if self.start_button.collidepoint(event.pos):
+                    self.game.start_new_investigation()
                     self.game.current_screen = "investigation"
                 elif self.help_button.collidepoint(event.pos):
                     print("Mostrar Ayuda")

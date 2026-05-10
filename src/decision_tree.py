@@ -43,9 +43,9 @@ class DecisionTree:
         simulando el recorrido del árbol.
         """
         msg_lower = message.lower()
-        insultos = ["tonto", "estupido", "idiota", "burlando"]
-        amenazas = ["golpear", "matar", "cuidado", "amenaza"]
-        rumores = ["dicen", "rumor", "verdad que", "editada", "publicó"]
+        insultos = ["tonto", "estupido", "idiota", "burlando", "peor", "odio", "soporta"]
+        amenazas = ["golpear", "matar", "cuidado", "amenaza", "publicar", "contraseñas", "suspendida"]
+        rumores = ["dicen", "rumor", "verdad que", "editada", "publicó", "link", "fotos", "dirección", "escucharon"]
 
         # Recorrer el árbol
         node = self.root

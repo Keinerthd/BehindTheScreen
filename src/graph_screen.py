@@ -56,10 +56,11 @@ class GraphScreen:
             if node_a in positions and node_b in positions:
                 pygame.draw.line(screen, COLORS["edge_color"], positions[node_a], positions[node_b], 2)
 
+        victim_name = self.game.case_manager.active_case.get("victim", "Emma")
         # Dibujar nodos
         for node, pos in positions.items():
-            # Destacar a la víctima (Emma) y a la cuenta anónima
-            if node == "Emma":
+            # Destacar a la víctima y a la cuenta anónima
+            if node == victim_name:
                 color = COLORS["success_green"]
             elif node == "ShadowUser":
                 color = COLORS["alert_red"]

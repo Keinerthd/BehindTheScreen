@@ -74,6 +74,34 @@ class InvestigationScreen:
         label = self.font_title.render(text, True, text_color)
         screen.blit(label, label.get_rect(center=rect.center))
 
+    def draw_wrapped_text(self, screen, text, font, color, x, y, max_width):
+        words = text.split(' ')
+        lines = []
+        current_line = []
+        for word in words:
+            test_line = ' '.join(current_line + [word])
+            width, _ = font.size(test_line)
+            if width <= max_width:
+                current_line.append(word)
+            else:
+                if current_line:
+                    lines.append(' '.join(current_line))
+                    current_line = [word]
+                else:
+                    lines.append(word)
+                    current_line = []
+        if current_line:
+            lines.append(' '.join(current_line))
+            
+        y_pos = y
+        for line in lines:
+            surf = font.render(line, True, color)
+            screen.blit(surf, (x, y_pos))
+            y_pos += font.get_linesize()
+            
+        return y_pos - y
+
+
     def draw(self, screen):
         screen.fill(COLORS["background"])
 
@@ -110,21 +138,23 @@ class InvestigationScreen:
             y_offset += 40
 
         y_offset = 70
+        max_chat_width = self.panel_chat.width - 30
         for msg in self.game.case_manager.get_messages():
             # Clasificar mensaje
             clase_msg = self.game.decision_tree.classify_message_automatic(msg)
             color_msg = COLORS["alert_red"] if clase_msg in ["Mensaje ofensivo", "Mensaje grave", "Cyberbullying"] else COLORS["white"]
             
-            surf = self.font_text.render(f"[*] {msg[:35]}...", True, COLORS["white"])
-            screen.blit(surf, (self.panel_chat.x + 15, self.panel_chat.y + y_offset))
+            text_to_draw = f"[*] {msg}"
+            used_height = self.draw_wrapped_text(screen, text_to_draw, self.font_text, COLORS["white"], self.panel_chat.x + 15, self.panel_chat.y + y_offset, max_chat_width)
             
             surf_class = self.font_text.render(f"-> [{clase_msg}]", True, color_msg)
-            screen.blit(surf_class, (self.panel_chat.x + 15, self.panel_chat.y + y_offset + 20))
+            screen.blit(surf_class, (self.panel_chat.x + 15, self.panel_chat.y + y_offset + used_height + 5))
             
-            y_offset += 55
+            y_offset += used_height + 35
 
         y_offset = 70
+        max_clue_width = self.panel_clues.width - 30
         for clue in self.game.case_manager.get_clues():
-            surf = self.font_text.render(f"- {clue[:35]}...", True, COLORS["neon_blue"])
-            screen.blit(surf, (self.panel_clues.x + 15, self.panel_clues.y + y_offset))
-            y_offset += 35
+            text_to_draw = f"- {clue}"
+            used_height = self.draw_wrapped_text(screen, text_to_draw, self.font_text, COLORS["neon_blue"], self.panel_clues.x + 15, self.panel_clues.y + y_offset, max_clue_width)
+            y_offset += used_height + 15

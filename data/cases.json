@@ -17,6 +17,78 @@
         "La cuenta anónima tiene relación con el grupo de Noah"
       ],
       "time_limit_minutes": 10
+    },
+    {
+      "case_id": 2,
+      "title": "El enlace malicioso",
+      "victim": "Leo",
+      "suspects": ["Alex", "Sam", "Chris"],
+      "bully": "Sam",
+      "messages": [
+        "¡Gana diamantes gratis en este link!",
+        "Tu cuenta será suspendida si no verificas aquí.",
+        "Mira esta foto tuya que encontré..."
+      ],
+      "clues": [
+        "El enlace dirige a un servidor proxy usado por Sam.",
+        "Sam recientemente aprendió sobre phishing.",
+        "Chris advirtió a Leo sobre enlaces, Alex ni siquiera estaba conectado."
+      ],
+      "time_limit_minutes": 10
+    },
+    {
+      "case_id": 3,
+      "title": "Suplantación de Identidad",
+      "victim": "Sofia",
+      "suspects": ["Diego", "Mateo", "Valentina"],
+      "bully": "Valentina",
+      "messages": [
+        "Odio a todo el mundo, no me hablen.",
+        "(Desde cuenta falsa) ¡Jaja, Sofia es la peor!",
+        "Voy a publicar los secretos de todos."
+      ],
+      "clues": [
+        "La cuenta falsa fue creada desde la misma red de Valentina.",
+        "Mateo estuvo jugando videojuegos todo el fin de semana.",
+        "Valentina y Sofia tuvieron una discusión recientemente."
+      ],
+      "time_limit_minutes": 10
+    },
+    {
+      "case_id": 4,
+      "title": "Filtración de Datos",
+      "victim": "Carlos",
+      "suspects": ["Juan", "Pedro", "Luis"],
+      "bully": "Pedro",
+      "messages": [
+        "Miren las fotos privadas que Carlos me envió.",
+        "¿Quién quiere saber la dirección de Carlos?",
+        "Tengo todas sus contraseñas."
+      ],
+      "clues": [
+        "Pedro es el único que tenía la contraseña del correo de Carlos.",
+        "Luis apenas usa sus redes sociales.",
+        "Los mensajes fueron enviados desde un cibercafé que Pedro frecuenta."
+      ],
+      "time_limit_minutes": 10
+    },
+    {
+      "case_id": 5,
+      "title": "Rumores en el Foro",
+      "victim": "Lucia",
+      "suspects": ["Maria", "Ana", "Elena"],
+      "bully": "Ana",
+      "messages": [
+        "¿Escucharon lo que hizo Lucia en la fiesta?",
+        "Me dijeron que Lucia copió en el examen.",
+        "Nadie soporta a Lucia en el equipo."
+      ],
+      "clues": [
+        "Ana fue la primera en comentar el post del rumor.",
+        "Maria defendió a Lucia en un comentario.",
+        "Elena estuvo ausente ese día en la escuela."
+      ],
+      "time_limit_minutes": 10
     }
   ]
 }
