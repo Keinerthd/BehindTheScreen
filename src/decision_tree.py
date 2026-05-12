@@ -20,8 +20,14 @@ class DecisionTreeNode:
         return self.result is not None
 
 class DecisionTree:
-    def __init__(self, data_path="data/decision_tree.json"):
-        self.data_path = data_path
+    def __init__(self, data_path=None):
+        if data_path is None:
+            # Construir la ruta relativa al archivo actual
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.data_path = os.path.join(base_dir, "data", "decision_tree.json")
+        else:
+            self.data_path = data_path
+            
         self.root = None
         self.load_tree()
 
@@ -43,9 +49,9 @@ class DecisionTree:
         simulando el recorrido del árbol.
         """
         msg_lower = message.lower()
-        insultos = ["tonto", "estupido", "idiota", "burlando", "peor", "odio", "soporta"]
-        amenazas = ["golpear", "matar", "cuidado", "amenaza", "publicar", "contraseñas", "suspendida"]
-        rumores = ["dicen", "rumor", "verdad que", "editada", "publicó", "link", "fotos", "dirección", "escucharon"]
+        insultos = ["tonto", "estupido", "idiota", "burlando", "peor", "odio", "soporta", "inútil", "malísimo", "asco"]
+        amenazas = ["golpear", "matar", "cuidado", "amenaza", "publicar", "contraseñas", "suspendida", "págame", "transferir", "monedas", "foto vergonzosa", "peor"]
+        rumores = ["dicen", "rumor", "verdad que", "editada", "publicó", "link", "fotos", "dirección", "escucharon", "diamantes gratis", "meme", "compártanlo", "grupo nuevo", "música fuerte"]
 
         # Recorrer el árbol
         node = self.root

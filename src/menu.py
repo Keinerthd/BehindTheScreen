@@ -7,21 +7,50 @@ class Menu:
         self.font_title = pygame.font.SysFont("courier new", 72, bold=True)
         self.font_subtitle = pygame.font.SysFont("courier new", 28)
         self.font_button = pygame.font.SysFont("courier new", 32, bold=True)
+        self.font_input = pygame.font.SysFont("courier new", 28)
 
-        self.start_button = pygame.Rect(490, 300, 300, 60)
-        self.help_button = pygame.Rect(490, 380, 300, 60)
-        self.exit_button = pygame.Rect(490, 460, 300, 60)
+        self.single_button = pygame.Rect(490, 280, 300, 50)
+        self.host_button = pygame.Rect(490, 340, 300, 50)
+        self.join_button = pygame.Rect(490, 400, 300, 50)
+        self.help_button = pygame.Rect(490, 460, 300, 50)
+        self.exit_button = pygame.Rect(490, 520, 300, 50)
+        
+        self.joining = False
+        self.ip_text = ""
+        self.connect_button = pygame.Rect(490, 420, 300, 60)
+        self.back_button = pygame.Rect(490, 500, 300, 60)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left click
-                if self.start_button.collidepoint(event.pos):
-                    self.game.start_new_investigation()
-                    self.game.current_screen = "investigation"
-                elif self.help_button.collidepoint(event.pos):
-                    print("Mostrar Ayuda")
-                elif self.exit_button.collidepoint(event.pos):
-                    self.game.running = False
+                if not self.joining:
+                    if self.single_button.collidepoint(event.pos):
+                        self.game.role = "detective"
+                        self.game.start_new_investigation()
+                        self.game.current_screen = "investigation"
+                    elif self.host_button.collidepoint(event.pos):
+                        self.game.host_game()
+                    elif self.join_button.collidepoint(event.pos):
+                        self.joining = True
+                        self.ip_text = ""
+                    elif self.help_button.collidepoint(event.pos):
+                        self.game.show_help = True
+                    elif self.exit_button.collidepoint(event.pos):
+                        self.game.running = False
+                else:
+                    if self.connect_button.collidepoint(event.pos):
+                        self.game.join_game(self.ip_text)
+                    elif self.back_button.collidepoint(event.pos):
+                        self.joining = False
+                        
+        elif event.type == pygame.KEYDOWN and self.joining:
+            if event.key == pygame.K_BACKSPACE:
+                self.ip_text = self.ip_text[:-1]
+            elif event.key == pygame.K_RETURN:
+                self.game.join_game(self.ip_text)
+            else:
+                if len(self.ip_text) < 15 and (event.unicode.isdigit() or event.unicode == '.'):
+                    self.ip_text += event.unicode
 
     def draw_button(self, screen, rect, text, mouse_pos):
         is_hovered = rect.collidepoint(mouse_pos)
@@ -42,7 +71,7 @@ class Menu:
     def draw(self, screen):
         screen.fill(COLORS["background"])
         
-        # Grid lineas de fondo para dar estilo hacker/cyberpunk (opcional, simple)
+        # Grid lineas de fondo
         for i in range(0, 1280, 40):
             pygame.draw.line(screen, (15, 25, 40), (i, 0), (i, 720))
         for i in range(0, 720, 40):
@@ -56,6 +85,34 @@ class Menu:
 
         mouse_pos = pygame.mouse.get_pos()
 
-        self.draw_button(screen, self.start_button, "INICIAR", mouse_pos)
-        self.draw_button(screen, self.help_button, "AYUDA", mouse_pos)
-        self.draw_button(screen, self.exit_button, "SALIR", mouse_pos)
+        if not self.joining:
+            self.draw_button(screen, self.single_button, "SINGLE PLAYER", mouse_pos)
+            self.draw_button(screen, self.host_button, "HOST GAME", mouse_pos)
+            self.draw_button(screen, self.join_button, "JOIN GAME", mouse_pos)
+            self.draw_button(screen, self.help_button, "AYUDA", mouse_pos)
+            self.draw_button(screen, self.exit_button, "SALIR", mouse_pos)
+            
+            if self.game.network and self.game.network.is_server and not self.game.network.connected:
+                msg = self.font_input.render(f"Esperando jugador en IP: {self.game.host_ip} ...", True, COLORS["neon_blue"])
+                screen.blit(msg, msg.get_rect(center=(640, 600)))
+                
+                start_msg = self.font_input.render("(Puedes empezar en Single Player si no hay conexión)", True, COLORS["gray_text"])
+                screen.blit(start_msg, start_msg.get_rect(center=(640, 640)))
+        else:
+            prompt = self.font_input.render("Ingresa la IP del Host:", True, COLORS["white"])
+            screen.blit(prompt, prompt.get_rect(center=(640, 300)))
+            
+            input_rect = pygame.Rect(490, 340, 300, 50)
+            pygame.draw.rect(screen, COLORS["panel"], input_rect)
+            pygame.draw.rect(screen, COLORS["neon_blue"], input_rect, 2)
+            
+            ip_surf = self.font_input.render(self.ip_text + "_", True, COLORS["neon_blue"])
+            screen.blit(ip_surf, (input_rect.x + 10, input_rect.y + 10))
+            
+            self.draw_button(screen, self.connect_button, "CONECTAR", mouse_pos)
+            self.draw_button(screen, self.back_button, "VOLVER", mouse_pos)
+            
+            if hasattr(self.game, 'connection_error') and self.game.connection_error:
+                err = self.font_input.render(self.game.connection_error, True, COLORS["alert_red"])
+                screen.blit(err, err.get_rect(center=(640, 600)))
+

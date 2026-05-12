@@ -16,7 +16,7 @@
         "Noah estuvo conectado a esa hora",
         "La cuenta anónima tiene relación con el grupo de Noah"
       ],
-      "time_limit_minutes": 10
+      "time_limit_minutes": 3
     },
     {
       "case_id": 2,
@@ -34,7 +34,7 @@
         "Sam recientemente aprendió sobre phishing.",
         "Chris advirtió a Leo sobre enlaces, Alex ni siquiera estaba conectado."
       ],
-      "time_limit_minutes": 10
+      "time_limit_minutes": 3
     },
     {
       "case_id": 3,
@@ -52,7 +52,7 @@
         "Mateo estuvo jugando videojuegos todo el fin de semana.",
         "Valentina y Sofia tuvieron una discusión recientemente."
       ],
-      "time_limit_minutes": 10
+      "time_limit_minutes": 3
     },
     {
       "case_id": 4,
@@ -70,7 +70,7 @@
         "Luis apenas usa sus redes sociales.",
         "Los mensajes fueron enviados desde un cibercafé que Pedro frecuenta."
       ],
-      "time_limit_minutes": 10
+      "time_limit_minutes": 3
     },
     {
       "case_id": 5,
@@ -88,7 +88,97 @@
         "Maria defendió a Lucia en un comentario.",
         "Elena estuvo ausente ese día en la escuela."
       ],
-      "time_limit_minutes": 10
+      "time_limit_minutes": 3
+    },
+    {
+      "case_id": 6,
+      "title": "Chantaje por Fotos",
+      "victim": "Andres",
+      "suspects": ["Felipe", "Martin", "Jose"],
+      "bully": "Martin",
+      "messages": [
+        "Págame o publico la foto vergonzosa.",
+        "Tienes 24 horas para transferir las monedas del juego.",
+        "No le digas a nadie o será peor."
+      ],
+      "clues": [
+        "La IP del extorsionista coincide con la de Martin.",
+        "Felipe ha estado ayudando a Andres con sus tareas.",
+        "Martin ha estado presumiendo de tener muchas monedas virtuales."
+      ],
+      "time_limit_minutes": 3
+    },
+    {
+      "case_id": 7,
+      "title": "Exclusión del Grupo",
+      "victim": "Camila",
+      "suspects": ["Laura", "Daniela", "Sara"],
+      "bully": "Laura",
+      "messages": [
+        "Hagamos un grupo nuevo sin Camila.",
+        "Ignórenla si entra al servidor.",
+        "No le pasen los apuntes de clase."
+      ],
+      "clues": [
+        "Laura fue la creadora del nuevo grupo secreto.",
+        "Sara intentó invitar a Camila pero fue expulsada también.",
+        "Daniela solo lee los mensajes y no participa."
+      ],
+      "time_limit_minutes": 3
+    },
+    {
+      "case_id": 8,
+      "title": "Toxicidad en Partida Online",
+      "victim": "Tomas",
+      "suspects": ["GamerX", "ProPlayer", "NoobSlayer"],
+      "bully": "GamerX",
+      "messages": [
+        "Eres malísimo, desinstala el juego.",
+        "Por tu culpa perdimos la partida, inútil.",
+        "Váyanse AFK para que este pierda puntos."
+      ],
+      "clues": [
+        "GamerX tiene un historial de reportes por toxicidad.",
+        "ProPlayer intentó calmar la situación en el chat de voz.",
+        "NoobSlayer es un bot de la plataforma."
+      ],
+      "time_limit_minutes": 3
+    },
+    {
+      "case_id": 9,
+      "title": "El Meme Viral",
+      "victim": "Valeria",
+      "suspects": ["Hugo", "Paco", "Luis"],
+      "bully": "Hugo",
+      "messages": [
+        "Miren la cara que puso Valeria en la foto de perfil.",
+        "Hice este meme con su foto, compártanlo.",
+        "Ya tiene más de 100 likes la burla."
+      ],
+      "clues": [
+        "Hugo descargó un programa de edición de fotos ayer.",
+        "Paco no sabe usar redes sociales muy bien.",
+        "Luis solo reaccionó al meme, pero no lo creó."
+      ],
+      "time_limit_minutes": 3
+    },
+    {
+      "case_id": 10,
+      "title": "Ataque a Clases Virtuales",
+      "victim": "Profesor Gómez",
+      "suspects": ["Carlos", "Andrés", "Miguel"],
+      "bully": "Miguel",
+      "messages": [
+        "Entren a esta clase a poner música fuerte.",
+        "Pásame el link de la clase del profesor Gómez.",
+        "Jajaja, lo sacamos de su propia clase."
+      ],
+      "clues": [
+        "Miguel fue el único que compartió el link en un foro público.",
+        "Carlos estaba participando activamente en clase.",
+        "Andrés tenía problemas de conexión y no pudo entrar."
+      ],
+      "time_limit_minutes": 3
     }
   ]
 }

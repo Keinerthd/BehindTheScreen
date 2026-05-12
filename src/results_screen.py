@@ -40,6 +40,9 @@ class ResultsScreen:
         elif self.result_type == "bad":
             color = COLORS["alert_red"]
             msg = "Has acusado a la persona equivocada."
+        elif self.result_type == "timeout":
+            color = COLORS["alert_red"]
+            msg = "El tiempo se agotó. La víctima abandonó la escuela."
         else:
             color = COLORS["gray_text"]
             msg = "Investigación inconclusa."

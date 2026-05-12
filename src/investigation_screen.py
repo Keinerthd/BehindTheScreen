@@ -15,8 +15,9 @@ class InvestigationScreen:
         self.panel_actions = pygame.Rect(860, 540, 400, 160)
 
         # Botones
-        self.btn_graph = pygame.Rect(880, 560, 360, 50)
-        self.btn_accuse = pygame.Rect(880, 630, 360, 50)
+        self.btn_graph = pygame.Rect(880, 550, 360, 40)
+        self.btn_interview = pygame.Rect(880, 600, 360, 40)
+        self.btn_accuse = pygame.Rect(880, 650, 360, 40)
         
         # Lógica de juego
         self.selected_suspect = None
@@ -36,13 +37,21 @@ class InvestigationScreen:
                         
                 if self.btn_graph.collidepoint(event.pos):
                     self.game.current_screen = "graph"
+                elif self.btn_interview.collidepoint(event.pos):
+                    if self.selected_suspect:
+                        self.game.interview_screen.start_interview(self.selected_suspect)
+                        self.game.current_screen = "interview"
                 elif self.btn_accuse.collidepoint(event.pos):
                     if self.selected_suspect:
                         bully = self.game.case_manager.active_case.get("bully")
                         if self.selected_suspect == bully:
                             self.game.results_screen.result_type = "good"
+                            if hasattr(self.game, "sound_manager"):
+                                self.game.sound_manager.play("success")
                         else:
                             self.game.results_screen.result_type = "bad"
+                            if hasattr(self.game, "sound_manager"):
+                                self.game.sound_manager.play("error")
                     else:
                         self.game.results_screen.result_type = "neutral"
                         
@@ -115,7 +124,17 @@ class InvestigationScreen:
 
         mouse_pos = pygame.mouse.get_pos()
         self.draw_button(screen, self.btn_graph, "ANALIZAR RED", mouse_pos)
+        self.draw_button(screen, self.btn_interview, "ENTREVISTAR", mouse_pos)
         self.draw_button(screen, self.btn_accuse, "ACUSAR SOSPECHOSO", mouse_pos, alert=True)
+
+        # Dibujar Timer
+        rem_ms = self.game.case_manager.get_remaining_time()
+        mins = int(rem_ms // 60000)
+        secs = int((rem_ms % 60000) // 1000)
+        time_str = f"TIEMPO: {mins:02d}:{secs:02d}"
+        t_color = COLORS["alert_red"] if mins < 2 else COLORS["neon_blue"]
+        t_surf = self.font_title.render(time_str, True, t_color)
+        screen.blit(t_surf, (860, 510))
 
         # Dibujar Datos del Caso Activo
         y_offset = 70

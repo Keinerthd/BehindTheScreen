@@ -29,25 +29,50 @@ class GraphManager:
             if len(suspects) > 2:
                 self.graph.add_edge(suspects[1], suspects[2], weight=2)
             
-        # Conectar al bully con el ShadowUser
-        if bully in suspects:
-            self.graph.add_edge(bully, "ShadowUser", weight=1) # Pista fuerte
+        # Conectar al ShadowUser con varios sospechosos para ofuscar (ruido)
+        for s in suspects:
+            if s == bully:
+                self.graph.add_edge(s, "ShadowUser", weight=1) # Conexión real, fuerte
+            else:
+                # Conexiones falsas con peso aleatorio mayor o igual para despistar
+                if random.random() > 0.3: # 70% de probabilidad de tener conexión falsa
+                    self.graph.add_edge(s, "ShadowUser", weight=random.randint(2, 5))
             
-        # Agregar algunas aristas extra al azar para simular una red
-        for _ in range(2):
+        # Agregar algunas aristas extra al azar entre sospechosos para simular una red y afectar la centralidad
+        for _ in range(4): # Aumentado a 4 para más ruido
             if suspects:
                 s1 = random.choice(suspects)
                 s2 = random.choice([victim] + suspects)
                 if s1 != s2:
+                    # Si la arista ya existe, podríamos sobreescribir el peso, lo cual está bien
                     self.graph.add_edge(s1, s2, weight=random.randint(1, 3))
-        
+                    
         # Generar posiciones visuales (Spring layout) 
         # para que Pygame sepa dónde dibujarlos
-        # Aumentamos scale y k para que no se amontonen
         self.positions = nx.spring_layout(self.graph, center=(640, 360), scale=250, k=0.5, iterations=50)
         
-        # Networkx spring layout devuelve floats entre -1 y 1 (o basados en el center y scale)
-        # Aseguramos que sean ints para pygame
+        for node, pos in self.positions.items():
+            self.positions[node] = (int(pos[0]), int(pos[1]))
+
+    def sabotage_graph(self):
+        """Modifica el grafo añadiendo ruido y alterando pesos para confundir los algoritmos."""
+        import random
+        nodes = list(self.graph.nodes())
+        if len(nodes) >= 2:
+            # Añadir 2 aristas aleatorias
+            for _ in range(2):
+                n1 = random.choice(nodes)
+                n2 = random.choice(nodes)
+                if n1 != n2:
+                    self.graph.add_edge(n1, n2, weight=random.randint(1, 3))
+            
+            # Modificar el peso de una arista existente
+            if self.graph.edges:
+                edge_to_mod = random.choice(list(self.graph.edges()))
+                self.graph[edge_to_mod[0]][edge_to_mod[1]]['weight'] = random.randint(1, 5)
+                
+        # Opcional: recalcular posiciones si queremos que el grafo "tiemble" o se reajuste con el ruido
+        self.positions = nx.spring_layout(self.graph, center=(640, 360), scale=250, k=0.5, iterations=50)
         for node, pos in self.positions.items():
             self.positions[node] = (int(pos[0]), int(pos[1]))
 
