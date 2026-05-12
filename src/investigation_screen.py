@@ -36,13 +36,19 @@ class InvestigationScreen:
                         self.selected_suspect = suspect
                         
                 if self.btn_graph.collidepoint(event.pos):
+                    if hasattr(self.game, "sound_manager"):
+                        self.game.sound_manager.play("button_click")
                     self.game.current_screen = "graph"
                 elif self.btn_interview.collidepoint(event.pos):
                     if self.selected_suspect:
+                        if hasattr(self.game, "sound_manager"):
+                            self.game.sound_manager.play("button_click")
                         self.game.interview_screen.start_interview(self.selected_suspect)
                         self.game.current_screen = "interview"
                 elif self.btn_accuse.collidepoint(event.pos):
                     if self.selected_suspect:
+                        if hasattr(self.game, "sound_manager"):
+                            self.game.sound_manager.play("button_click")
                         bully = self.game.case_manager.active_case.get("bully")
                         if self.selected_suspect == bully:
                             self.game.results_screen.result_type = "good"
@@ -176,4 +182,4 @@ class InvestigationScreen:
         for clue in self.game.case_manager.get_clues():
             text_to_draw = f"- {clue}"
             used_height = self.draw_wrapped_text(screen, text_to_draw, self.font_text, COLORS["neon_blue"], self.panel_clues.x + 15, self.panel_clues.y + y_offset, max_clue_width)
-            y_offset += used_height + 15
+            y_offset += used_height + 15

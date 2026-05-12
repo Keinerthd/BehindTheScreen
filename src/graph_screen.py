@@ -24,8 +24,12 @@ class GraphScreen:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if self.btn_back.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.current_screen = "investigation"
                 elif self.btn_bfs.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.case_manager.reduce_time(15000)
                     victim = self.game.case_manager.active_case.get("victim", "Emma")
                     nodes = self.game.graph_manager.bfs_traversal(victim)
@@ -33,6 +37,8 @@ class GraphScreen:
                     self.highlighted_edges = []
                     self.algorithm_result = f"BFS: Propagación desde {victim}"
                 elif self.btn_centrality.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.case_manager.reduce_time(15000)
                     centrality = self.game.graph_manager.get_centrality()
                     if centrality:
@@ -41,6 +47,8 @@ class GraphScreen:
                         self.algorithm_result = f"Más Influyente: {max_node} ({centrality[max_node]:.2f})"
                     self.highlighted_edges = []
                 elif self.btn_dijkstra.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.case_manager.reduce_time(15000)
                     victim = self.game.case_manager.active_case.get("victim", "Emma")
                     try:

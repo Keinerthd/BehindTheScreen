@@ -14,6 +14,7 @@ class Menu:
         self.join_button = pygame.Rect(490, 400, 300, 50)
         self.help_button = pygame.Rect(490, 460, 300, 50)
         self.exit_button = pygame.Rect(490, 520, 300, 50)
+        self.mute_button = pygame.Rect(490, 580, 300, 50)
         
         self.joining = False
         self.ip_text = ""
@@ -25,22 +26,40 @@ class Menu:
             if event.button == 1: # Left click
                 if not self.joining:
                     if self.single_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.game.role = "detective"
                         self.game.start_new_investigation()
                         self.game.current_screen = "investigation"
                     elif self.host_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.game.host_game()
                     elif self.join_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.joining = True
                         self.ip_text = ""
                     elif self.help_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.game.show_help = True
                     elif self.exit_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.game.running = False
+                    elif self.mute_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
+                            self.game.sound_manager.toggle_mute()
                 else:
                     if self.connect_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.game.join_game(self.ip_text)
                     elif self.back_button.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.joining = False
                         
         elif event.type == pygame.KEYDOWN and self.joining:
@@ -91,6 +110,8 @@ class Menu:
             self.draw_button(screen, self.join_button, "JOIN GAME", mouse_pos)
             self.draw_button(screen, self.help_button, "AYUDA", mouse_pos)
             self.draw_button(screen, self.exit_button, "SALIR", mouse_pos)
+            mute_label = "UNMUTE" if hasattr(self.game, 'sound_manager') and self.game.sound_manager.muted else "MUTE"
+            self.draw_button(screen, self.mute_button, mute_label, mouse_pos)
             
             if self.game.network and self.game.network.is_server and not self.game.network.connected:
                 msg = self.font_input.render(f"Esperando jugador en IP: {self.game.host_ip} ...", True, COLORS["neon_blue"])
@@ -115,4 +136,4 @@ class Menu:
             if hasattr(self.game, 'connection_error') and self.game.connection_error:
                 err = self.font_input.render(self.game.connection_error, True, COLORS["alert_red"])
                 screen.blit(err, err.get_rect(center=(640, 600)))
-
+

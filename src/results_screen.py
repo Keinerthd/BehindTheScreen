@@ -14,6 +14,8 @@ class ResultsScreen:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if self.btn_menu.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.current_screen = "menu"
 
     def draw_button(self, screen, rect, text, mouse_pos):

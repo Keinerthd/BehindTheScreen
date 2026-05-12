@@ -29,6 +29,8 @@ class BullyScreen:
             if event.button == 1:
                 if self.sabotage_cooldown <= 0:
                     if self.btn_sabotage_clue.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         clues = self.game.case_manager.get_clues()
                         if clues:
                             clue_to_remove = random.choice(clues)
@@ -38,6 +40,8 @@ class BullyScreen:
                             })
                             self.sabotage_cooldown = 180 # 3 segundos a 60 FPS
                     elif self.btn_sabotage_msg.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         msgs = self.game.case_manager.get_messages()
                         if msgs:
                             msg_to_remove = random.choice(msgs)

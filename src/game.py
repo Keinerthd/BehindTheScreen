@@ -11,7 +11,6 @@ from src.network import NetworkManager
 from src.bully_screen import BullyScreen
 from src.interview_screen import InterviewScreen
 from src.sound_manager import SoundManager
-from src.sound_manager import SoundManager
 
 class Game:
     def __init__(self):
@@ -48,6 +47,7 @@ class Game:
         self.host_ip = ""
         self.connection_error = ""
         self.role = "detective"
+        self.last_time_warning = None
         
         self.sound_manager = SoundManager()
 
@@ -78,6 +78,7 @@ class Game:
         )
         if hasattr(self, 'investigation_screen'):
             self.investigation_screen.selected_suspect = None
+        self.last_time_warning = None
             
         # Enviar estado inicial si somos el servidor
         if self.network.is_server and self.network.connected:
@@ -93,6 +94,23 @@ class Game:
             "clues": self.case_manager.get_clues()
         }
         self.network.send_message(state)
+
+    def update_music(self):
+        if not hasattr(self, 'sound_manager') or not self.sound_manager.enabled:
+            return
+
+        track = None
+        if self.current_screen == "menu":
+            track = "menu"
+        elif self.current_screen in ["investigation", "interview", "graph"]:
+            track = "investigation_bully" if self.role == "bully" else "investigation_detective"
+        elif self.current_screen == "bully":
+            track = "investigation_bully"
+        elif self.current_screen == "results":
+            track = "result_winner" if self.results_screen.result_type == "good" else "result_gameover"
+
+        if track:
+            self.sound_manager.play_music(track)
 
 
     def run(self):
@@ -114,6 +132,9 @@ class Game:
                     toggle_high_contrast()
                 elif event.key == pygame.K_h:
                     self.show_help = not getattr(self, 'show_help', False)
+                elif event.key == pygame.K_m:
+                    if hasattr(self, 'sound_manager'):
+                        self.sound_manager.toggle_mute()
 
             if getattr(self, 'show_help', False):
                 # Si la ayuda está abierta, no pasamos eventos a las pantallas
@@ -135,6 +156,8 @@ class Game:
                 self.results_screen.handle_event(event)
 
     def update(self):
+        self.update_music()
+
         # Transición cuando el server conecta con el cliente
         if self.current_screen == "menu" and self.network.connected:
             if self.network.is_server:
@@ -145,7 +168,17 @@ class Game:
 
         # Check timer game over
         if self.current_screen in ["investigation", "interview", "graph"]:
-            if self.case_manager.get_remaining_time() <= 0:
+            remaining = self.case_manager.get_remaining_time()
+            if remaining > 300000:
+                self.last_time_warning = None
+            elif remaining <= 120000 and self.last_time_warning != "low":
+                self.sound_manager.play("low_time")
+                self.last_time_warning = "low"
+            elif remaining <= 300000 and self.last_time_warning != "half":
+                self.sound_manager.play("half_time")
+                self.last_time_warning = "half"
+
+            if remaining <= 0:
                 self.results_screen.result_type = "timeout"
                 self.current_screen = "results"
 

@@ -94,12 +94,16 @@ class InterviewScreen:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if self.btn_back.collidepoint(event.pos):
+                    if hasattr(self.game, 'sound_manager'):
+                        self.game.sound_manager.play("button_click")
                     self.game.current_screen = "investigation"
                     return
 
                 # Check visible options only
                 for rect, opt in self.option_rects:
                     if rect.collidepoint(event.pos):
+                        if hasattr(self.game, 'sound_manager'):
+                            self.game.sound_manager.play("button_click")
                         self.add_history("Tú", opt["text"])
                         self.game.case_manager.reduce_time(5000)  # Cuesta 5 segundos preguntar
 
