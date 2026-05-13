@@ -1,5 +1,6 @@
 import pygame
 from src.settings import COLORS
+from src.network import NetworkManager
 
 class ResultsScreen:
     def __init__(self, game):
@@ -16,6 +17,11 @@ class ResultsScreen:
                 if self.btn_menu.collidepoint(event.pos):
                     if hasattr(self.game, 'sound_manager'):
                         self.game.sound_manager.play("button_click")
+                    self.game.network.stop()
+                    self.game.network = NetworkManager()
+                    self.game.role = "detective"
+                    self.game.host_ip = ""
+                    self.game.connection_error = ""
                     self.game.current_screen = "menu"
 
     def draw_button(self, screen, rect, text, mouse_pos):
@@ -36,18 +42,32 @@ class ResultsScreen:
         title_text = "CASO CERRADO"
         color = COLORS["white"]
         
-        if self.result_type == "good":
-            color = COLORS["success_green"]
-            msg = "Has identificado correctamente al acosador."
-        elif self.result_type == "bad":
-            color = COLORS["alert_red"]
-            msg = "Has acusado a la persona equivocada."
-        elif self.result_type == "timeout":
-            color = COLORS["alert_red"]
-            msg = "El tiempo se agotó. La víctima abandonó la escuela."
+        if self.game.role == "detective":
+            if self.result_type == "good":
+                color = COLORS["success_green"]
+                msg = "Has identificado correctamente al acosador."
+            elif self.result_type == "bad":
+                color = COLORS["alert_red"]
+                msg = "Has acusado a la persona equivocada."
+            elif self.result_type == "timeout":
+                color = COLORS["alert_red"]
+                msg = "El tiempo se agotó. La víctima abandonó la escuela."
+            else:
+                color = COLORS["gray_text"]
+                msg = "Investigación inconclusa."
         else:
-            color = COLORS["gray_text"]
-            msg = "Investigación inconclusa."
+            if self.result_type == "good":
+                color = COLORS["alert_red"]
+                msg = "El detective te atrapó. Has perdido."
+            elif self.result_type == "bad":
+                color = COLORS["success_green"]
+                msg = "Has engañado al detective. Has ganado."
+            elif self.result_type == "timeout":
+                color = COLORS["success_green"]
+                msg = "El detective no resolvió el caso a tiempo. Has ganado."
+            else:
+                color = COLORS["gray_text"]
+                msg = "Investiga el próximo caso."
 
         title = self.font_title.render(title_text, True, color)
         screen.blit(title, title.get_rect(center=(640, 200)))

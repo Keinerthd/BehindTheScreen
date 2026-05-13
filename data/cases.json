@@ -4,7 +4,11 @@
       "case_id": 1,
       "title": "El usuario anónimo",
       "victim": "Emma",
-      "suspects": ["Noah", "Mia", "Lucas"],
+      "suspects": [
+        "Noah",
+        "Mia",
+        "Lucas"
+      ],
       "bully": "Noah",
       "messages": [
         "No deberías volver al grupo",
@@ -16,13 +20,17 @@
         "Noah estuvo conectado a esa hora",
         "La cuenta anónima tiene relación con el grupo de Noah"
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 2,
       "title": "El enlace malicioso",
       "victim": "Leo",
-      "suspects": ["Alex", "Sam", "Chris"],
+      "suspects": [
+        "Alex",
+        "Sam",
+        "Chris"
+      ],
       "bully": "Sam",
       "messages": [
         "¡Gana diamantes gratis en este link!",
@@ -34,13 +42,17 @@
         "Sam recientemente aprendió sobre phishing.",
         "Chris advirtió a Leo sobre enlaces, Alex ni siquiera estaba conectado."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 3,
       "title": "Suplantación de Identidad",
       "victim": "Sofia",
-      "suspects": ["Diego", "Mateo", "Valentina"],
+      "suspects": [
+        "Diego",
+        "Mateo",
+        "Valentina"
+      ],
       "bully": "Valentina",
       "messages": [
         "Odio a todo el mundo, no me hablen.",
@@ -52,13 +64,17 @@
         "Mateo estuvo jugando videojuegos todo el fin de semana.",
         "Valentina y Sofia tuvieron una discusión recientemente."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 4,
       "title": "Filtración de Datos",
       "victim": "Carlos",
-      "suspects": ["Juan", "Pedro", "Luis"],
+      "suspects": [
+        "Juan",
+        "Pedro",
+        "Luis"
+      ],
       "bully": "Pedro",
       "messages": [
         "Miren las fotos privadas que Carlos me envió.",
@@ -70,13 +86,17 @@
         "Luis apenas usa sus redes sociales.",
         "Los mensajes fueron enviados desde un cibercafé que Pedro frecuenta."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 5,
       "title": "Rumores en el Foro",
       "victim": "Lucia",
-      "suspects": ["Maria", "Ana", "Elena"],
+      "suspects": [
+        "Maria",
+        "Ana",
+        "Elena"
+      ],
       "bully": "Ana",
       "messages": [
         "¿Escucharon lo que hizo Lucia en la fiesta?",
@@ -88,13 +108,17 @@
         "Maria defendió a Lucia en un comentario.",
         "Elena estuvo ausente ese día en la escuela."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 6,
       "title": "Chantaje por Fotos",
       "victim": "Andres",
-      "suspects": ["Felipe", "Martin", "Jose"],
+      "suspects": [
+        "Felipe",
+        "Martin",
+        "Jose"
+      ],
       "bully": "Martin",
       "messages": [
         "Págame o publico la foto vergonzosa.",
@@ -106,13 +130,17 @@
         "Felipe ha estado ayudando a Andres con sus tareas.",
         "Martin ha estado presumiendo de tener muchas monedas virtuales."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 7,
       "title": "Exclusión del Grupo",
       "victim": "Camila",
-      "suspects": ["Laura", "Daniela", "Sara"],
+      "suspects": [
+        "Laura",
+        "Daniela",
+        "Sara"
+      ],
       "bully": "Laura",
       "messages": [
         "Hagamos un grupo nuevo sin Camila.",
@@ -124,13 +152,17 @@
         "Sara intentó invitar a Camila pero fue expulsada también.",
         "Daniela solo lee los mensajes y no participa."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 8,
       "title": "Toxicidad en Partida Online",
       "victim": "Tomas",
-      "suspects": ["GamerX", "ProPlayer", "NoobSlayer"],
+      "suspects": [
+        "GamerX",
+        "ProPlayer",
+        "NoobSlayer"
+      ],
       "bully": "GamerX",
       "messages": [
         "Eres malísimo, desinstala el juego.",
@@ -142,13 +174,17 @@
         "ProPlayer intentó calmar la situación en el chat de voz.",
         "NoobSlayer es un bot de la plataforma."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 9,
       "title": "El Meme Viral",
       "victim": "Valeria",
-      "suspects": ["Hugo", "Paco", "Luis"],
+      "suspects": [
+        "Hugo",
+        "Paco",
+        "Luis"
+      ],
       "bully": "Hugo",
       "messages": [
         "Miren la cara que puso Valeria en la foto de perfil.",
@@ -160,13 +196,17 @@
         "Paco no sabe usar redes sociales muy bien.",
         "Luis solo reaccionó al meme, pero no lo creó."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     },
     {
       "case_id": 10,
       "title": "Ataque a Clases Virtuales",
       "victim": "Profesor Gómez",
-      "suspects": ["Carlos", "Andrés", "Miguel"],
+      "suspects": [
+        "Carlos",
+        "Andrés",
+        "Miguel"
+      ],
       "bully": "Miguel",
       "messages": [
         "Entren a esta clase a poner música fuerte.",
@@ -178,7 +218,7 @@
         "Carlos estaba participando activamente en clase.",
         "Andrés tenía problemas de conexión y no pudo entrar."
       ],
-      "time_limit_minutes": 3
+      "time_limit_minutes": 7
     }
   ]
 }

@@ -1,4 +1,5 @@
 import pygame
+import random
 from config import WIDTH, HEIGHT, FPS
 from src.menu import Menu
 from src.investigation_screen import InvestigationScreen
@@ -48,6 +49,7 @@ class Game:
         self.connection_error = ""
         self.role = "detective"
         self.last_time_warning = None
+        self.game_over_sent = False
         
         self.sound_manager = SoundManager()
 
@@ -79,6 +81,7 @@ class Game:
         if hasattr(self, 'investigation_screen'):
             self.investigation_screen.selected_suspect = None
         self.last_time_warning = None
+        self.game_over_sent = False
             
         # Enviar estado inicial si somos el servidor
         if self.network.is_server and self.network.connected:
@@ -94,6 +97,14 @@ class Game:
             "clues": self.case_manager.get_clues()
         }
         self.network.send_message(state)
+
+    def _recover_random_clue(self):
+        available = [c for c in self.case_manager.all_clues if c not in self.case_manager.unlocked_clues]
+        if available:
+            clue = random.choice(available)
+            self.case_manager.unlocked_clues.append(clue)
+            return clue
+        return None
 
     def update_music(self):
         if not hasattr(self, 'sound_manager') or not self.sound_manager.enabled:
@@ -169,18 +180,30 @@ class Game:
         # Check timer game over
         if self.current_screen in ["investigation", "interview", "graph"]:
             remaining = self.case_manager.get_remaining_time()
-            if remaining > 300000:
+            total_time = self.case_manager.active_case.get("time_limit_minutes", 10) * 60 * 1000
+            half_threshold = total_time // 2
+            low_threshold = 120000 if total_time >= 240000 else total_time // 3
+
+            if remaining > half_threshold:
                 self.last_time_warning = None
-            elif remaining <= 120000 and self.last_time_warning != "low":
+            elif remaining <= low_threshold and self.last_time_warning != "low":
                 self.sound_manager.play("low_time")
                 self.last_time_warning = "low"
-            elif remaining <= 300000 and self.last_time_warning != "half":
+            elif remaining <= half_threshold and self.last_time_warning != "half":
                 self.sound_manager.play("half_time")
                 self.last_time_warning = "half"
 
             if remaining <= 0:
                 self.results_screen.result_type = "timeout"
                 self.current_screen = "results"
+
+        # Enviar resultado al cliente si somos el host y no lo hemos hecho
+        if self.current_screen == "results" and self.network.is_server and self.network.connected and not self.game_over_sent:
+            self.network.send_message({
+                "type": "game_over",
+                "result": self.results_screen.result_type
+            })
+            self.game_over_sent = True
 
         # Procesar mensajes de red
         for msg in self.network.get_messages():
@@ -207,6 +230,19 @@ class Game:
                     self.sound_manager.play("sabotage")
                     self.graph_manager.sabotage_graph()
                     self.sync_state() # Resync
+            elif msg_type == "create_fake_clue":
+                clue = msg.get("clue")
+                if clue and clue not in self.case_manager.get_clues():
+                    self.case_manager.unlocked_clues.append(clue)
+                    self.sync_state()
+            elif msg_type == "hacker_detected":
+                recovered = self._recover_random_clue()
+                if recovered:
+                    self.sync_state()
+            elif msg_type == "game_over":
+                self.results_screen.result_type = msg.get("result", "neutral")
+                self.current_screen = "results"
+                self.game_over_sent = True
 
     def draw(self):
         from src.settings import COLORS
