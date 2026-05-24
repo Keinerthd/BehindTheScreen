@@ -1,3 +1,4 @@
+import os
 import pygame
 import random
 from config import WIDTH, HEIGHT, FPS
@@ -50,9 +51,22 @@ class Game:
         self.role = "detective"
         self.last_time_warning = None
         self.game_over_sent = False
-        
         self.sound_manager = SoundManager()
+        self.clock_icon = self._load_clock_icon()
+        self._time_alert_shown_at = None  # Marca el tiempo en ms cuando se mostró el icono
 
+    def _load_clock_icon(self):
+        icon_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "assets",
+            "images",
+            "clock_icon.png",
+        )
+        try:
+            image = pygame.image.load(icon_path).convert_alpha()
+            return pygame.transform.smoothscale(image, (64, 64))
+        except Exception:
+            return None
 
     def host_game(self):
         success, msg = self.network.host_game()
@@ -184,14 +198,25 @@ class Game:
             half_threshold = total_time // 2
             low_threshold = 120000 if total_time >= 240000 else total_time // 3
 
-            if remaining > half_threshold:
-                self.last_time_warning = None
-            elif remaining <= low_threshold and self.last_time_warning != "low":
+            warning = None
+            if remaining <= low_threshold:
+                warning = "low"
+            elif remaining <= half_threshold:
+                warning = "half"
+
+            now = pygame.time.get_ticks()
+            if warning == "low" and self.last_time_warning != "low":
                 self.sound_manager.play("low_time")
                 self.last_time_warning = "low"
-            elif remaining <= half_threshold and self.last_time_warning != "half":
+                self._time_alert_shown_at = now
+            elif warning == "half" and self.last_time_warning != "half":
                 self.sound_manager.play("half_time")
                 self.last_time_warning = "half"
+                self._time_alert_shown_at = now
+
+            # Si el tiempo de alerta ya pasó, ocultar el icono
+            if self._time_alert_shown_at is not None and now - self._time_alert_shown_at > 2000:
+                self._time_alert_shown_at = None
 
             if remaining <= 0:
                 self.results_screen.result_type = "timeout"
@@ -244,6 +269,16 @@ class Game:
                 self.current_screen = "results"
                 self.game_over_sent = True
 
+    def draw_time_alert_icon(self):
+        if self.current_screen not in ["investigation", "interview", "graph"]:
+            return
+        if self._time_alert_shown_at is None or self.clock_icon is None:
+            return
+
+        margin = 20
+        pos = (WIDTH - self.clock_icon.get_width() - margin, margin)
+        self.screen.blit(self.clock_icon, pos)
+
     def draw(self):
         from src.settings import COLORS
         # El fill ya lo hace cada pantalla en su propio draw, pero por seguridad:
@@ -261,6 +296,8 @@ class Game:
             self.graph_screen.draw(self.screen)
         elif self.current_screen == "results":
             self.results_screen.draw(self.screen)
+
+        self.draw_time_alert_icon()
 
         # Dibujar overlay de ayuda si está activo
         if getattr(self, 'show_help', False):

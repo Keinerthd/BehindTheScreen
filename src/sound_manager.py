@@ -16,6 +16,8 @@ class SoundManager:
         self.music_tracks = {}
         self.muted = False
         self.master_volume = 0.4
+        self._single_shot_sounds = {"half_time", "low_time"}
+        self._single_shot_channels = {}
         self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.assets_dir = os.path.join(self.base_dir, "assets")
 
@@ -87,11 +89,20 @@ class SoundManager:
         if not self.enabled or self.muted:
             return
         sound = self.sounds.get(sound_name)
-        if sound:
-            try:
-                sound.play()
-            except Exception:
-                pass
+        if not sound:
+            return
+
+        try:
+            if sound_name in self._single_shot_sounds:
+                channel = self._single_shot_channels.get(sound_name)
+                if channel is not None and channel.get_busy():
+                    return
+                self._single_shot_channels[sound_name] = sound.play()
+                return
+
+            sound.play()
+        except Exception:
+            pass
 
     def play_music(self, track_name, loops=-1, volume=0.4):
         if not self.enabled:
