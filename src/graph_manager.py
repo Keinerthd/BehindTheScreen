@@ -100,6 +100,21 @@ class GraphManager:
         except nx.NetworkXNoPath:
             return []
 
+    def inject_fake_node(self, label):
+        """Añade un nodo falso con conexiones espurias para confundir el análisis."""
+        import random
+        nodes = list(self.graph.nodes())
+        self.graph.add_node(label)
+        # Conectar el nodo falso con 1-2 nodos existentes aleatorios
+        for _ in range(random.randint(1, 2)):
+            if nodes:
+                target = random.choice(nodes)
+                self.graph.add_edge(label, target, weight=random.randint(2, 5))
+        # Recalcular posiciones
+        self.positions = nx.spring_layout(self.graph, center=(640, 360), scale=250, k=0.5, iterations=50)
+        for node, pos in self.positions.items():
+            self.positions[node] = (int(pos[0]), int(pos[1]))
+
     def get_centrality(self):
         # Grado de centralidad para detectar nodos influyentes
         return nx.degree_centrality(self.graph)

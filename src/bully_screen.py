@@ -1,4 +1,5 @@
 import pygame
+import math
 from src.settings import COLORS
 from src.network import NetworkManager
 import random
@@ -84,6 +85,14 @@ class BullyScreen:
                             "type": "create_fake_clue",
                             "clue": fake_clue
                         })
+                        # También inyectar localmente en modo single-player / sin red
+                        if not self.game.network.connected:
+                            if fake_clue not in self.game.case_manager.get_clues():
+                                self.game.case_manager.unlocked_clues.append(fake_clue)
+                            fake_label = "???" + str(random.randint(10, 99))
+                            self.game._fake_graph_nodes.append(fake_label)
+                            self.game.graph_manager.inject_fake_node(fake_label)
+                        self.game.add_notification("↑ PISTA FALSA INYECTADA", (255, 160, 0))
                         self.suspicion += 15
                         self.sabotage_cooldown_fake = 900  # 15 segundos a 60 FPS
                 self._check_detection()
@@ -184,7 +193,21 @@ class BullyScreen:
 
         # Mostrar el riesgo de detección siempre debajo de los cooldown
         risk_y = max(self.panel_status.y + self.panel_status.height - 80, y_info + 10)
-        suspicion_text = self.font_text.render(f"RIESGO DE DETECCIÓN: {min(self.suspicion, 100)}%", True, COLORS["alert_red"])
+        # Pulso de color cuando sospecha > 70%
+        sus_val = min(self.suspicion, 100)
+        if sus_val >= 70:
+            pulse = 0.5 + 0.5 * math.sin(pygame.time.get_ticks() / 120)
+            r = 255
+            g = int(50 * (1 - pulse))
+            b = 0
+            bar_fill_color = (r, g, b)
+            label_color = (255, int(80 + 120 * pulse), 0)
+        else:
+            bar_fill_color = COLORS["alert_red"]
+            label_color    = COLORS["alert_red"]
+
+        suspicion_text = self.font_text.render(
+            f"RIESGO DE DETECCIÓN: {sus_val}%", True, label_color)
         screen.blit(suspicion_text, (self.panel_status.x + 15, risk_y))
 
         bar_width = 520
@@ -192,8 +215,20 @@ class BullyScreen:
         bar_y = risk_y + 25
         if bar_y + 20 > self.panel_status.bottom - 15:
             bar_y = self.panel_status.bottom - 35
-        pygame.draw.rect(screen, COLORS["gray_text"], (bar_x, bar_y, bar_width, 20), border_radius=5)
-        pygame.draw.rect(screen, COLORS["alert_red"], (bar_x, bar_y, int((bar_width / 100) * min(self.suspicion, 100)), 20), border_radius=5)
+
+        # Brillo exterior pulsante si alta sospecha
+        if sus_val >= 70:
+            pulse2 = 0.5 + 0.5 * math.sin(pygame.time.get_ticks() / 100)
+            glow_h = int(4 + 4 * pulse2)
+            glow_surf = pygame.Surface((bar_width + glow_h * 2, 20 + glow_h * 2), pygame.SRCALPHA)
+            glow_surf.fill((255, 40, 0, int(60 * pulse2)))
+            screen.blit(glow_surf, (bar_x - glow_h, bar_y - glow_h))
+
+        pygame.draw.rect(screen, COLORS["gray_text"],
+                         (bar_x, bar_y, bar_width, 20), border_radius=5)
+        fill_w = int((bar_width / 100) * sus_val)
+        pygame.draw.rect(screen, bar_fill_color,
+                         (bar_x, bar_y, fill_w, 20), border_radius=5)
         
         if not (disabled_clue or disabled_msg or disabled_fake):
             status_text = self.font_text.render("SABOTAJE LISTO", True, COLORS["success_green"])
